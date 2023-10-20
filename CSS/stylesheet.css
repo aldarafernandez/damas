@@ -1,0 +1,15 @@
+body{
+    background-color: rgba(174, 129, 84, 0.679);
+}
+
+
+#tablero{
+    margin-left: 25em;
+    margin-top: 2em;
+}
+
+td{
+    border: 3px solid black;
+    width: 3.5em;
+    height: 3.5em;
+}
