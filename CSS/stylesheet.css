@@ -1,15 +1,31 @@
 body{
     background-color: rgba(174, 129, 84, 0.679);
 }
-
-
-#tablero{
-    margin-left: 25em;
-    margin-top: 2em;
+#juego{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+table{
+    margin-top: 3em;
+    margin-left: -15em;
 }
 
 td{
     border: 3px solid black;
     width: 3.5em;
     height: 3.5em;
+}
+
+.blanco{
+    background-color: rgba(245, 245, 245, 0.87);
+}
+.negro{
+    background-color: rgba(35, 35, 35, 0.942);
+}
+
+#turno{
+    margin-top: -20em;
+    margin-left: -15em;
 }
