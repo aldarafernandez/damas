@@ -1,5 +1,18 @@
 body{
     background-color: rgba(174, 129, 84, 0.679);
+    color: whitesmoke;
+}
+#turno{
+    margin-left: -15em;
+}
+#turno p{
+    height: 15em;
+}
+input{
+    border: none;
+    padding: 1em;
+    background-color: darkblue;
+    color: whitesmoke;
 }
 #juego{
     display: flex;
@@ -14,10 +27,13 @@ table{
 
 td{
     border: 3px solid black;
-    width: 3.5em;
-    height: 3.5em;
+    width: 4em;
+    height: 4em;
 }
-
+img{
+    height: 4em;
+    width: 4em;
+}
 .blanco{
     background-color: rgba(245, 245, 245, 0.87);
 }
@@ -25,7 +41,3 @@ td{
     background-color: rgba(35, 35, 35, 0.942);
 }
 
-#turno{
-    margin-top: -20em;
-    margin-left: -15em;
-}
