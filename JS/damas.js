@@ -1,7 +1,6 @@
 const imagenes = document.getElementsByTagName("img")
 const boton = document.getElementById("nuevaPartida")
 
-let turno = document.getElementById("turnoJugador")
 
 const BLANCAS = 1
 const NEGRAS = 2
@@ -11,6 +10,10 @@ const JUGADOR1 = 1
 const JUGADOR2 = 2
 
 let turnoJugador = JUGADOR1
+let turno = document.getElementById("turnoJugador")
+
+let idFichaSeleccionada = ""
+let idDestino = ""
 
 let tablero = [
     [VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO],
@@ -48,20 +51,37 @@ let cambiarTurno = () => {
         turno.innerText = "Jugador 2 / Negras"
     }
 }
-let moverFicha = () => {
-
+let moverFicha = (posicionOriginal, nuevaPosicion) => {
+    let celdaInicial = document.getElementById(posicionOriginal)
+    let celdaVacia = document.getElementById(nuevaPosicion)
+    celdaVacia.src = celdaInicial.src
+    celdaInicial.src = "/img/vacio.png"
+    celdaInicial.parentElement.style.border = none 
+    celdaVacia.parentElement.style.border = none
+}
+let seleccionarDestino = event =>{
+    idDestino = event.target.id
+    event.target.parentElement.style.border = "3px solid red"
 }
 let seleccionarFicha = event => {
-    const [, fila, columna] = event.target.id.split("_")
-    console.log(event.target.id.split("_"))
-    console.log(tablero[fila][columna])
-    if (tablero[fila][columna] === NEGRAS || tablero[fila][columna] === BLANCAS){
-        console.log(event.target.parentElement)
-        event.target.parentElement.style.border = "red 3px solid"
-    }
-}
+    idFichaSeleccionada = event.target.id
+    event.target.parentElement.style.border = "3px solid red"
+    for (const imagen of imagenes) {
+        if(imagen.src == "/img/vacio.png"){
+            imagen.onclick = seleccionarDestino
+        }        
+    }   
+    moverFicha(idFichaSeleccionada, idDestino)
+}    
 let nuevoJuego = () => {
     fichasIniciales()
+    turno.innerText = "Jugador 1 / Blancas"
+    for (const imagen of imagenes) {
+        if(imagen.src != "/img/vacio.png"){
+            imagen.onclick = seleccionarFicha
+        }    
+    }
+    boton.onclick = nuevoJuego
 }
 
 
@@ -72,10 +92,10 @@ let nuevoJuego = () => {
 
 
 fichasIniciales()
+turno.innerText = "Jugador 1 / Blancas"
 for (const imagen of imagenes) {
     if(imagen.src != "/img/vacio.png"){
         imagen.onclick = seleccionarFicha
-    }
-    
+    }    
 }
 boton.onclick = nuevoJuego
