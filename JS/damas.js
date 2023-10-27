@@ -15,16 +15,6 @@ let turno = document.getElementById("turnoJugador")
 let idFichaSeleccionada = ""
 let idDestino = ""
 
-let tablero = [
-    [VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO],
-    [VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO],
-    [VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO],
-    [VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO],
-    [VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO],
-    [VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO],
-    [VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO],
-    [VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO, VACIO]
-] 
 
 
 
@@ -46,39 +36,52 @@ let cambiarTurno = () => {
     if(turnoJugador == JUGADOR1){
         turnoJugador = JUGADOR2
         turno.innerText = "Jugador 1 / Blancas"
+        idDestino = ""
+        idFichaSeleccionada = ""
     }else{
         turnoJugador = JUGADOR1
         turno.innerText = "Jugador 2 / Negras"
+        idDestino = ""
+        idFichaSeleccionada = ""
     }
 }
+// mueve la ficha a la posición seleccionada
 let moverFicha = (posicionOriginal, nuevaPosicion) => {
     let celdaInicial = document.getElementById(posicionOriginal)
+    console.log(celdaInicial)
     let celdaVacia = document.getElementById(nuevaPosicion)
+    console.log(celdaVacia)
+    celdaVacia.removeAttribute("src")
+    celdaVacia.setAttribute("src", celdaInicial.src)
     celdaVacia.src = celdaInicial.src
     celdaInicial.src = "/img/vacio.png"
-    celdaInicial.parentElement.style.border = none 
-    celdaVacia.parentElement.style.border = none
+    celdaInicial.parentElement.style.removeProperty("border")
+    celdaVacia.parentElement.style.removeProperty("border")
+    cambiarTurno()
 }
-let seleccionarDestino = event =>{
-    idDestino = event.target.id
-    event.target.parentElement.style.border = "3px solid red"
+// selecciona la ficha a mover y la posición a la que se mueve
+let seleccionar = event => {
+    if (idFichaSeleccionada === ""){
+        idFichaSeleccionada = event.target.id
+        event.target.parentElement.style.border = "3px solid red"
+    }else if(idDestino === ""){
+        idDestino = event.target.id
+        event.target.parentElement.style.border = "3px solid red"
+    }
+
+    if (idFichaSeleccionada !== "" && idDestino !== ""){
+        moverFicha(idFichaSeleccionada, idDestino)
+    }
 }
-let seleccionarFicha = event => {
-    idFichaSeleccionada = event.target.id
-    event.target.parentElement.style.border = "3px solid red"
-    for (const imagen of imagenes) {
-        if(imagen.src == "/img/vacio.png"){
-            imagen.onclick = seleccionarDestino
-        }        
-    }   
-    moverFicha(idFichaSeleccionada, idDestino)
-}    
+// reinicia el juego  
 let nuevoJuego = () => {
     fichasIniciales()
     turno.innerText = "Jugador 1 / Blancas"
+    idDestino = ""
+    idFichaSeleccionada = ""
     for (const imagen of imagenes) {
-        if(imagen.src != "/img/vacio.png"){
-            imagen.onclick = seleccionarFicha
+        if(imagen.src !== "/img/vacio.png"){
+            imagen.onclick = seleccionar
         }    
     }
     boton.onclick = nuevoJuego
@@ -94,8 +97,8 @@ let nuevoJuego = () => {
 fichasIniciales()
 turno.innerText = "Jugador 1 / Blancas"
 for (const imagen of imagenes) {
-    if(imagen.src != "/img/vacio.png"){
-        imagen.onclick = seleccionarFicha
+    if(imagen.src !== "/img/vacio.png"){
+        imagen.onclick = seleccionar
     }    
 }
 boton.onclick = nuevoJuego
