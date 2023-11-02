@@ -43,12 +43,12 @@ let tablero = [
 let fichasTablero = () => {
     for (const imagen of imagenes) {
         let fichaImagen = imagen.getAttribute("src");
-        if(fichaImagen === "/img/negra.png"){
+        if(fichaImagen.includes("negra")){
             const [ ,fil, col] = imagen.id.split("_");
             let fila = +fil;
             let columna = +col;
             tablero[fila][columna] = NEGRAS;
-        }else if(fichaImagen === "/img/blanca.png"){
+        }else if(fichaImagen.includes("blanca")){
             const [ ,fil, col] = imagen.id.split("_");
             let fila = +fil;
             let columna = +col;
@@ -87,18 +87,20 @@ let moverFicha = (posicionOriginal, nuevaPosicion) => {
 };
 // selecciona la ficha a mover y la posición a la que se mueve comprobando que sea un movimiento válido
 let seleccionar = event => {
+    
     let seleccionada;
     let destino;
     if (idFichaSeleccionada === ""){
         seleccionada = document.getElementById(event.target.id);
+        console.log(seleccionada)
         let ficha = seleccionada.getAttribute("src");
         if (turnoJugador === JUGADOR1){
-            if (ficha === "/img/blanca.png"){
+            if (ficha.includes("blanca")){
                 idFichaSeleccionada = seleccionada.id;
                 event.target.parentElement.style.border = "3px solid red";
             };
         }else {
-            if (ficha === "/img/negra.png"){
+            if (ficha.includes("negra")){
                 idFichaSeleccionada = seleccionada.id;
                 event.target.parentElement.style.border = "3px solid red";
             };
@@ -109,19 +111,33 @@ let seleccionar = event => {
         const[ , fil, col] = idFichaSeleccionada.split("_");
         let fila = +fil;
         let columna = +col;
-        if(document.getElementById(idFichaSeleccionada).getAttribute("src") === "/img/blanca.png"){
+        if(document.getElementById(idFichaSeleccionada).getAttribute("src").includes("blanca")){
             if ((destino.id === "img_"+(fila-1)+"_"+columna) || (destino.id === "img_"+(fila-1)+"_"+(columna+1)) || (destino.id === "img_"+(fila-1)+"_"+(columna-1))) {
-                if (ficha === "/img/vacio.png"){
+                if (ficha.includes("vacio")){
                     idDestino = destino.id;
                 };
+            }else if(destino.id === "img_"+(fila-2)+"_"+columna){
+                if(turnoJugador === JUGADOR1){
+                    if(document.getElementById("img_"+(fila-1)+"_"+columna).getAttribute("src").includes("negra") && ficha.includes("vacio")){
+                        document.getElementById("img_"+(fila-1)+"_"+columna).setAttribute("src", "/img/vacio.png");
+                        idDestino = destino.id;
+                    };
+                };   
             };
-        }else if(document.getElementById(idFichaSeleccionada).getAttribute("src") === "/img/negra.png"){
+        }else if(document.getElementById(idFichaSeleccionada).getAttribute("src").includes("negra")){
             if ((destino.id === "img_"+(fila+1)+"_"+columna) || (destino.id === "img_"+(fila+1)+"_"+(columna+1)) || (destino.id === "img_"+(fila+1)+"_"+(columna-1))) {
-                if (ficha === "/img/vacio.png"){
+                if (ficha.includes("vacio")){
                     idDestino = destino.id;
                 };
+            }else if(destino.id === "img_"+(fila+2)+"_"+columna){
+                if(turnoJugador === JUGADOR2){
+                    if(document.getElementById("img_"+(fila+1)+"_"+columna).getAttribute("src").includes("blanca") && ficha.includes("vacio")){
+                        document.getElementById("img_"+(fila+1)+"_"+columna).setAttribute("src", "/img/vacio.png");
+                        idDestino = destino.id;
+                    };
+                }; 
             };
-        }
+        };
     };
     
     if (idFichaSeleccionada !== "" && idDestino !== ""){
@@ -136,9 +152,9 @@ let comprobarGanador = () => {
     let fichasNegras = 0;
     for (const imagen of imagenes) {
         let fichaimagen = imagen.getAttribute("src");
-        if(fichaimagen == "/img/blanca.png"){
+        if(fichaimagen.includes("blanca")){
             fichasBlancas++;
-        }else if(fichaimagen == "/img/negra.png"){
+        }else if(fichaimagen.includes("negra")){
             fichasNegras++;
         };
     }
@@ -157,7 +173,7 @@ let nuevoJuego = () => {
     for (const imagen of imagenes) {
         const [ ,fil, col] = imagen.id.split("_");
         let fila = +fil;
-            let columna = +col;
+        let columna = +col;
         if (tablero[fila, columna] === 1){
             imagen.removeAttribute("src");
             imagen.setAttribute("src", "/img/blanca.png");
