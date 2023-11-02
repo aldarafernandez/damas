@@ -42,17 +42,16 @@ let tablero = [
 // Actualiza el tablero a la posición actual de las fichas
 let fichasTablero = () => {
     for (const imagen of imagenes) {
+        const [ ,fil, col] = imagen.id.split("_");
+        let fila = +fil;
+        let columna = +col;
         let fichaImagen = imagen.getAttribute("src");
-        if(fichaImagen.includes("negra")){
-            const [ ,fil, col] = imagen.id.split("_");
-            let fila = +fil;
-            let columna = +col;
+        if(imagen.src.includes("negra")){ 
             tablero[fila][columna] = NEGRAS;
-        }else if(fichaImagen.includes("blanca")){
-            const [ ,fil, col] = imagen.id.split("_");
-            let fila = +fil;
-            let columna = +col;
+        }else if(imagen.src.includes("blanca")){
             tablero[fila][columna] = BLANCAS;
+        }else if(imagen.src.includes("vacio")){
+            tablero[fila][columna] = VACIO;
         };
     };
 };
@@ -168,19 +167,19 @@ let comprobarGanador = () => {
     };
 };
 // reinicia el juego  
-let nuevoJuego = () => {
+let nuevoJuego = event => {
     tablero = tableroInicial
     for (const imagen of imagenes) {
         const [ ,fil, col] = imagen.id.split("_");
         let fila = +fil;
         let columna = +col;
-        if (tablero[fila, columna] === 1){
+        if (tablero[fila][columna] === 1){
             imagen.removeAttribute("src");
             imagen.setAttribute("src", "/img/blanca.png");
-        }else if(tablero[fila, columna] === 2){
+        }else if(tablero[fila][columna] === 2){
             imagen.removeAttribute("src");
             imagen.setAttribute("src", "/img/negra.png");
-        }else if(tablero[fila, columna] === 0){
+        }else if(tablero[fila][columna] === 0){
             imagen.removeAttribute("src");
             imagen.setAttribute("src", "/img/vacio.png");
         };
