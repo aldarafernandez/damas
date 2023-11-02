@@ -63,14 +63,14 @@ let cambiarTurno = () => {
         turno.innerText = "Jugador 2 / Negras";
         idDestino = "";
         idFichaSeleccionada = "";
-    }else{
+    }else if(turnoJugador === JUGADOR2){
         turnoJugador = JUGADOR1;
         turno.innerText = "Jugador 1 / Blancas";
         idDestino = "";
         idFichaSeleccionada = "";
     };
 };
-// mueve la ficha a la posición seleccionada comprobando que sea un movimiento válido
+// mueve la ficha a la posición seleccionada
 let moverFicha = (posicionOriginal, nuevaPosicion) => {
     let celdaInicial = document.getElementById(posicionOriginal);
     let celdaVacia = document.getElementById(nuevaPosicion);
@@ -78,28 +78,19 @@ let moverFicha = (posicionOriginal, nuevaPosicion) => {
     const fila = +fil;
     const columna = +col;
 
-    if (celdaInicial.getAttribute("src") === "/img/blanca.png"){
-            celdaVacia.removeAttribute("src");
-            celdaVacia.setAttribute("src", celdaInicial.src);
-            celdaInicial.src = "/img/vacio.png";
-            celdaInicial.parentElement.style.removeProperty("border");
-            fichasTablero();
-            cambiarTurno();
-        
-    }else if (celdaInicial.getAttribute("src") === "/img/negra.png"){
-            celdaVacia.removeAttribute("src");
-            celdaVacia.setAttribute("src", celdaInicial.src);
-            celdaInicial.src = "/img/vacio.png";
-            celdaInicial.parentElement.style.removeProperty("border");
-            fichasTablero();
-            cambiarTurno();
-    };
-    
+    celdaVacia.removeAttribute("src");
+    celdaVacia.setAttribute("src", celdaInicial.src);
+    celdaInicial.src = "/img/vacio.png";
+    celdaInicial.parentElement.style.removeProperty("border");
+    fichasTablero();
+    cambiarTurno();
 };
-// selecciona la ficha a mover y la posición a la que se mueve
+// selecciona la ficha a mover y la posición a la que se mueve comprobando que sea un movimiento válido
 let seleccionar = event => {
+    let seleccionada;
+    let destino;
     if (idFichaSeleccionada === ""){
-        let seleccionada = document.getElementById(event.target.id);
+        seleccionada = document.getElementById(event.target.id);
         let ficha = seleccionada.getAttribute("src");
         if (turnoJugador === JUGADOR1){
             if (ficha === "/img/blanca.png"){
@@ -113,7 +104,7 @@ let seleccionar = event => {
             };
         };
     }else if(idDestino === ""){
-        let destino = document.getElementById(event.target.id);
+        destino = document.getElementById(event.target.id);
         let ficha = destino.getAttribute("src");
         const[ , fil, col] = idFichaSeleccionada.split("_");
         let fila = +fil;
