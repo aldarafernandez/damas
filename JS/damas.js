@@ -73,16 +73,29 @@ let cambiarTurno = () => {
 let moverFicha = (posicionOriginal, nuevaPosicion) => {
     let celdaInicial = document.getElementById(posicionOriginal);
     let celdaVacia = document.getElementById(nuevaPosicion);
-    const[ , fil, col] = celdaInicial.id.split("_");
-    const fila = +fil;
-    const columna = +col;
 
     celdaVacia.removeAttribute("src");
     celdaVacia.setAttribute("src", celdaInicial.src);
     celdaInicial.src = "/img/vacio.png";
     celdaInicial.parentElement.style.removeProperty("border");
     fichasTablero();
-    cambiarTurno();
+    comprobarGanador();
+
+    const[ , fil, col] = celdaVacia.id.split("_");
+    let fila = +fil;
+    let columna = +col;
+    if(celdaVacia.getAttribute("src").includes("blanca")){
+        if(tablero[fila-1][columna] === JUGADOR2){
+            seleccionar();
+        };
+    }else if(celdaVacia.getAttribute("src").includes("negra")){
+        if(tablero[fila+1][columna] === JUGADOR1){
+            seleccionar();
+        };
+    }else{
+        cambiarTurno();
+    };
+    
 };
 // selecciona la ficha a mover y la posición a la que se mueve comprobando que sea un movimiento válido
 let seleccionar = event => {
@@ -145,8 +158,6 @@ let seleccionar = event => {
 };
 // Comprueba el ganador mirando si no queda ninguna ficha de su color
 let comprobarGanador = () => {
-    let fichasBlancasIniciales = 12;
-    let fichasNegrasIniciales = 12;
     let fichasBlancas = 0;
     let fichasNegras = 0;
     for (const imagen of imagenes) {
@@ -156,18 +167,18 @@ let comprobarGanador = () => {
         }else if(fichaimagen.includes("negra")){
             fichasNegras++;
         };
-    }
+    };
 
-    if (fichasBlancasIniciales - fichasBlancas === 0){
-        alert("Gana el Jugador 2");
+    if (fichasBlancas === 0){
+        window.alert("Gana el Jugador 2/Negras");
         nuevoJuego();
-    }else if (fichasNegrasIniciales - fichasNegras === 0){
-        alert("Gana el Jugador 1");
+    }else if (fichasNegras === 0){
+        window.alert("Gana el Jugador 1/Blancas");
         nuevoJuego();
     };
 };
 // reinicia el juego  
-let nuevoJuego = event => {
+let nuevoJuego = () => {
     tablero = tableroInicial
     for (const imagen of imagenes) {
         const [ ,fil, col] = imagen.id.split("_");
