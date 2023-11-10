@@ -45,7 +45,6 @@ let fichasTablero = () => {
         const [ ,fil, col] = imagen.id.split("_");
         let fila = +fil;
         let columna = +col;
-        let fichaImagen = imagen.getAttribute("src");
         if(imagen.src.includes("negra")){ 
             tablero[fila][columna] = NEGRAS;
         }else if(imagen.src.includes("blanca")){
@@ -86,15 +85,20 @@ let moverFicha = (posicionOriginal, nuevaPosicion) => {
     let columna = +col;
     if(celdaVacia.getAttribute("src").includes("blanca")){
         if(tablero[fila-1][columna] === JUGADOR2){
-            seleccionar();
+            let destino = "img_" + (fila-2) + "_" + columna;
+            document.getElementById("img_" + (fila-1) + "_" + columna).removeAttribute("src");
+            document.getElementById("img_" + (fila-1) + "_" + columna).setAttribute("src", "/img/vacio.png")
+            moverFicha(nuevaPosicion, destino);
         };
     }else if(celdaVacia.getAttribute("src").includes("negra")){
         if(tablero[fila+1][columna] === JUGADOR1){
-            seleccionar();
+            let destino = "img_" + (fila+2) + "_" + columna;
+            document.getElementById("img_" + (fila+1) + "_" + columna).removeAttribute("src");
+            document.getElementById("img_" + (fila+1) + "_" + columna).setAttribute("src", "/img/vacio.png")
+            moverFicha(celdaVacia.id, destino);
         };
-    }else{
-        cambiarTurno();
     };
+    cambiarTurno();
     
 };
 // selecciona la ficha a mover y la posición a la que se mueve comprobando que sea un movimiento válido
