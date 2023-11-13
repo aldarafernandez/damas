@@ -11,9 +11,11 @@ const JUGADOR2 = 2;
 
 let turnoJugador = JUGADOR1;
 let turno = document.getElementById("turnoJugador");
-
+// variables que gurdan la posición de la ficha seleccionada y a donde se mueve
 let idFichaSeleccionada = "";
 let idDestino = "";
+// variable que cuenta el número de movimientos de una ficha en su turno, para el caso de comer fichas
+let movimientos = 0;
 
 // Posiciones iniciales de las fichas
 let tableroInicial = [
@@ -61,11 +63,13 @@ let cambiarTurno = () => {
         turno.innerText = "Jugador 2 / Negras";
         idDestino = "";
         idFichaSeleccionada = "";
+        movimientos = 0;
     }else if(turnoJugador === JUGADOR2){
         turnoJugador = JUGADOR1;
         turno.innerText = "Jugador 1 / Blancas";
         idDestino = "";
         idFichaSeleccionada = "";
+        movimientos = 0;
     };
 };
 // mueve la ficha a la posición seleccionada
@@ -79,23 +83,26 @@ let moverFicha = (posicionOriginal, nuevaPosicion) => {
     celdaInicial.parentElement.style.removeProperty("border");
     fichasTablero();
     comprobarGanador();
-
-    const[ , fil, col] = celdaVacia.id.split("_");
-    let fila = +fil;
-    let columna = +col;
-    if(celdaVacia.getAttribute("src").includes("blanca")){
-        if(tablero[fila-1][columna] === JUGADOR2){
-            let destino = "img_" + (fila-2) + "_" + columna;
-            document.getElementById("img_" + (fila-1) + "_" + columna).removeAttribute("src");
-            document.getElementById("img_" + (fila-1) + "_" + columna).setAttribute("src", "/img/vacio.png")
-            moverFicha(nuevaPosicion, destino);
-        };
-    }else if(celdaVacia.getAttribute("src").includes("negra")){
-        if(tablero[fila+1][columna] === JUGADOR1){
-            let destino = "img_" + (fila+2) + "_" + columna;
-            document.getElementById("img_" + (fila+1) + "_" + columna).removeAttribute("src");
-            document.getElementById("img_" + (fila+1) + "_" + columna).setAttribute("src", "/img/vacio.png")
-            moverFicha(celdaVacia.id, destino);
+    // si el movimiento anterior fue comer una ficha (movimientos valdrá 1) y tiene más para comer (hay una ficha de color contrario delante)
+    //comerá las fichas de manera automática
+    if(movimientos > 0){
+        const[ , fil, col] = celdaVacia.id.split("_");
+        let fila = +fil;
+        let columna = +col;
+        if(celdaVacia.getAttribute("src").includes("blanca")){
+            if(tablero[fila-1][columna] === JUGADOR2 && tablero[fila-2][columna] === VACIO){
+                let destino = "img_" + (fila-2) + "_" + columna;
+                document.getElementById("img_" + (fila-1) + "_" + columna).removeAttribute("src");
+                document.getElementById("img_" + (fila-1) + "_" + columna).setAttribute("src", "/img/vacio.png");
+                moverFicha(nuevaPosicion, destino);
+            };
+        }else if(celdaVacia.getAttribute("src").includes("negra")){
+            if(tablero[fila+1][columna] === JUGADOR1 && tablero[fila+2][columna] === VACIO){
+                let destino = "img_" + (fila+2) + "_" + columna;
+                document.getElementById("img_" + (fila+1) + "_" + columna).removeAttribute("src");
+                document.getElementById("img_" + (fila+1) + "_" + columna).setAttribute("src", "/img/vacio.png");
+                moverFicha(nuevaPosicion, destino);
+            };
         };
     };
     cambiarTurno();
@@ -108,7 +115,6 @@ let seleccionar = event => {
     let destino;
     if (idFichaSeleccionada === ""){
         seleccionada = document.getElementById(event.target.id);
-        console.log(seleccionada)
         let ficha = seleccionada.getAttribute("src");
         if (turnoJugador === JUGADOR1){
             if (ficha.includes("blanca")){
@@ -137,6 +143,7 @@ let seleccionar = event => {
                     if(document.getElementById("img_"+(fila-1)+"_"+columna).getAttribute("src").includes("negra") && ficha.includes("vacio")){
                         document.getElementById("img_"+(fila-1)+"_"+columna).setAttribute("src", "/img/vacio.png");
                         idDestino = destino.id;
+                        movimientos++;
                     };
                 };   
             };
@@ -150,6 +157,7 @@ let seleccionar = event => {
                     if(document.getElementById("img_"+(fila+1)+"_"+columna).getAttribute("src").includes("blanca") && ficha.includes("vacio")){
                         document.getElementById("img_"+(fila+1)+"_"+columna).setAttribute("src", "/img/vacio.png");
                         idDestino = destino.id;
+                        movimientos++;
                     };
                 }; 
             };
@@ -186,6 +194,7 @@ let nuevoJuego = () => {
     tablero = tableroInicial
     for (const imagen of imagenes) {
         const [ ,fil, col] = imagen.id.split("_");
+        imagen.parentElement.style.border="";
         let fila = +fil;
         let columna = +col;
         if (tablero[fila][columna] === 1){
