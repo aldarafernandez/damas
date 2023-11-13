@@ -208,18 +208,10 @@ let nuevoJuego = () => {
             imagen.setAttribute("src", "/img/vacio.png");
         };
     };
-
-    fichasTablero();
     turno.innerText = "Jugador 1 / Blancas";
     idDestino = "";
     idFichaSeleccionada = "";
-    for (const imagen of imagenes) {
-        imagen.onclick = seleccionar; 
-    };
-    boton.onclick = nuevoJuego;
 }
-
-
 
 
 
